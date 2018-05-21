@@ -1,0 +1,14 @@
+D:\GCW\MNS_SERVICE\MNS_SERVICE\bin\MNS_SERVICE.dll.config
+D:\GCW\MNS_SERVICE\MNS_SERVICE\bin\MNS_SERVICE.dll
+D:\GCW\MNS_SERVICE\MNS_SERVICE\bin\MNS_SERVICE.pdb
+D:\GCW\MNS_SERVICE\MNS_SERVICE\obj\Debug\MNS_SERVICE.csproj.CoreCompileInputs.cache
+D:\GCW\MNS_SERVICE\MNS_SERVICE\obj\Debug\MNS_SERVICE.dll
+D:\GCW\MNS_SERVICE\MNS_SERVICE\obj\Debug\MNS_SERVICE.pdb
+D:\GCW\MNS_SERVICE\MNS_SERVICE\obj\Debug\MNS_SERVICE.csprojResolveAssemblyReference.cache
+D:\Education\University\ВКР\Graduate Qualifying Work\MNS_SERVICE\bin\MNS_SERVICE.dll.config
+D:\Education\University\ВКР\Graduate Qualifying Work\MNS_SERVICE\bin\MNS_SERVICE.dll
+D:\Education\University\ВКР\Graduate Qualifying Work\MNS_SERVICE\bin\MNS_SERVICE.pdb
+D:\Education\University\ВКР\Graduate Qualifying Work\MNS_SERVICE\obj\Debug\MNS_SERVICE.csproj.CoreCompileInputs.cache
+D:\Education\University\ВКР\Graduate Qualifying Work\MNS_SERVICE\obj\Debug\MNS_SERVICE.dll
+D:\Education\University\ВКР\Graduate Qualifying Work\MNS_SERVICE\obj\Debug\MNS_SERVICE.pdb
+D:\Education\University\ВКР\Graduate Qualifying Work\MNS_SERVICE\obj\Debug\MNS_SERVICE.csprojAssemblyReference.cache
