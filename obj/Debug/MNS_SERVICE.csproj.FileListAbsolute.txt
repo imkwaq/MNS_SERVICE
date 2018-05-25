@@ -12,3 +12,10 @@ D:\Education\University\ВКР\Graduate Qualifying Work\MNS_SERVICE\obj\Debug\MN
 D:\Education\University\ВКР\Graduate Qualifying Work\MNS_SERVICE\obj\Debug\MNS_SERVICE.dll
 D:\Education\University\ВКР\Graduate Qualifying Work\MNS_SERVICE\obj\Debug\MNS_SERVICE.pdb
 D:\Education\University\ВКР\Graduate Qualifying Work\MNS_SERVICE\obj\Debug\MNS_SERVICE.csprojAssemblyReference.cache
+D:\Education\University\ВКР\GQW.git\Graduate Qualifying Work\MNS_SERVICE\bin\MNS_SERVICE.dll.config
+D:\Education\University\ВКР\GQW.git\Graduate Qualifying Work\MNS_SERVICE\bin\MNS_SERVICE.dll
+D:\Education\University\ВКР\GQW.git\Graduate Qualifying Work\MNS_SERVICE\bin\MNS_SERVICE.pdb
+D:\Education\University\ВКР\GQW.git\Graduate Qualifying Work\MNS_SERVICE\obj\Debug\MNS_SERVICE.csprojAssemblyReference.cache
+D:\Education\University\ВКР\GQW.git\Graduate Qualifying Work\MNS_SERVICE\obj\Debug\MNS_SERVICE.csproj.CoreCompileInputs.cache
+D:\Education\University\ВКР\GQW.git\Graduate Qualifying Work\MNS_SERVICE\obj\Debug\MNS_SERVICE.dll
+D:\Education\University\ВКР\GQW.git\Graduate Qualifying Work\MNS_SERVICE\obj\Debug\MNS_SERVICE.pdb
