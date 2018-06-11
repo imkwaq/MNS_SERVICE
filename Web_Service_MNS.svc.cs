@@ -39,6 +39,10 @@ namespace MNS_SERVICE
         public int[] In_tri;
         public float[] z_tri;
 
+        public int[,] in_tr;
+        public int[] In_tr;
+        public float[,] z_tr;
+
         public float[,] z_ji;
         public int[,] in_ji;
         public int[] In_ji;
@@ -327,35 +331,212 @@ namespace MNS_SERVICE
                     {
                         g = 5 - 2 * l;
                         w[i,j] += g * b;
-                    }
-                    //for (int m = 0; m <= 1; m++)
-                    //{
-                    //    j = in_ji[kji, m];
-                    //    if (j == 0) continue;
-                    //    g = (5 - 2 * l) * (1 - 2 * m);
-                    //    w[i, j] += g * b;
-                    //}
+                    }                    
                 }
-            //    j = n + kji; //число узлов+текущий номер строки
-            //    for (int l = 0; l <= 3; l++)    //цикл по всем столбцам 
-            //    {
-            //        i = in_ji[kji, l];  //запись в переменную i значений элементов массива включений
-            //        if (i == 0) continue;  //если нулевой элемент, то переход на следующую итерацию
-            //        if (l < 2) //если нулевой или первый столбец
-            //        {
-            //            g = 1 - 2 * l; //1 если нулевой столбец и -1 если первый
-            //            w[i, j] += g;   //запись в матрицу 1 или -1
-            //            w[j, i] -= g;   //запись в матрицу -1 или 1
-            //        }
-            //        else    //если второй или третий столбец
-            //        {
-            //            g = 5 - 2 * l;  //1 если второй столбец и -1 если третий
-            //            w[i, j] += g * z_ji[kji]; //запись в матрицу B или -B
-            //        }
-            //    }
             }
-            //n += nji; //изменение размерности
-        }        
+        }
+        //Формирование конмлексных частных матриц частотно-зависимого ИНУТ
+        public void form_ei(int[,] in_ei, float[,] z_ei, int nei, Complex[,] w, Complex s)
+        {
+            Complex yy = new Complex(0, 0);
+            int i1, i2, j, g;
+            for (int kei = 1; kei <= nei; kei++)    //цикл по всем строкам
+            {
+                yy = z_ei[kei, 0] * (1 + s * z_ei[kei, 1]) / (1 + s * z_ei[kei, 2]);
+                //for (int l = 2; l <= 3; l++)
+                //{
+                i1 = n + kei;
+                i2 = i1 + nei;
+                w[i2, i1] = yy;
+                for (int m = 0; m <= 3; m++)
+                {
+                    j = in_ei[kei, m];
+                    if (j == 0) continue;
+                    if (m < 2)
+                    {
+                        g = 1 - 2 * m;
+                        w[i1, j] -= g;
+                        w[j, i1] += g;
+                    }
+                    else
+                    {
+                        g = 5 - 2 * m;
+                        w[i2, j] -= g;
+                        w[j, i2] += g;
+                    }
+                }
+            }
+            n += 2 * nei;
+        }
+        //Формирование конмлексных частных матриц идеального операционного усилителя
+        public void form_oui(int[,] in_oui, float[,] z_oui, int noui, Complex[,] w)
+        {
+            Complex yy = new Complex(0, 0);
+            int i, j1, j2, g;
+            for (int koui = 1; koui <= noui; koui++)    //цикл по всем строкам
+            {
+                j1 = n + koui;
+                j2 = j1 + noui;
+                w[j2, j1] = new Complex(-1, 0);
+                for (int l = 0; l <= 3; l++)
+                {
+                    i = in_oui[koui, l];
+                    if (i == 0) continue;
+                    if (l < 2)
+                    {
+                        g = 1 - 2 * l;
+                        w[i, j1] += g;
+                        w[j1, i] -= g;                       
+                    }
+                    else
+                    {
+                        g = 5 - 2 * l;
+                        w[i, j2] += g;
+                    }
+                }
+            }
+            n += 2 * noui;
+        }
+        //Формирование комплексных частных матриц трансформатора
+        public void form_tr(int[,] in_tr, float[,] z_tr, int ntr, Complex[,] w, Complex s)
+        {
+            int i1, i2, j, g;
+            for (int ktr = 1; ktr <= ntr; ktr++)
+            {
+                i1 = n + ktr;
+                i2 = i1 + ntr;
+                w[i1, i1] = z_tr[ktr, 0] + s * z_tr[ktr, 2];
+                w[i2, i2] = z_tr[ktr, 1] + s * z_tr[ktr, 3];
+                w[i1, i2] = s * z_tr[ktr, 4];
+                w[i2, i1] = s * z_tr[ktr, 4];
+                for (int m = 0; m <= 3; m++)
+                {
+                    j = in_tr[ktr, m];
+                    if (j == 0) continue;
+                    if (m < 2)
+                    {
+                        g = 1 - 2 * m;
+                        w[i1, j] -= g;
+                        w[j, i1] += g;
+                    }
+                    else
+                    {
+                        g = 5 - 2 * m;
+                        w[i2, j] -= g;
+                        w[j, i2] += g;
+                    }
+                }
+            }
+            n += 2 * ntr;
+        }
+
+        //Формирование комплексных частных матриц биполярного транзистора
+        public void form_tb(int[,] in_tb, float[,] z_tb, int ntb, Complex[,] w, Complex s)
+        {
+            Complex[,] y = new Complex[5, 5];
+            int i, j, ii, jj, g, l, m;
+            int[,] in_d = { { 4, 3 }, { 1, 4 }, { 4, 2 }, { 1, 4 }, { 4, 2 } };
+            int[] in_ju = { 4, 1, 2, 4 };
+            for (int ktb = 1; ktb <= ntb; ktb++)
+            {
+                for (i = 1; i <= 4; i++)
+                    for (j = 1; j <= 4; j++)
+                        y[i, j] = new Complex();
+                for (int k = 0; k <= 4; k++)
+                    for (l = 0; l <= 1; l++)
+                    {
+                        i = in_d[k, l];
+                        for (m = 0; m <= 1; m++)
+                        {
+                            j = in_d[k, m];
+                            g = (1 - 2 * l) * (1 - 2 * m);
+                            if (k < 3)
+                                y[i, j] += g / z_tb[ktb, k];
+                            else
+                                y[i, j] += s * z_tb[ktb, k] * g;
+                        }
+                    }
+                for (l = 2; l <= 3; l++)
+                {
+                    i = in_ju[l];
+                    for (m = 0; m <= 1; m++)
+                    {
+                        j = in_ju[m];
+                        g = (5 - 2 * l) * (1 - 2 * m);
+                        y[i, j] += g * z_tb[ktb, 5] / (1 + z_tb[ktb, 5]) / z_tb[ktb, 1];
+                    }
+                }
+                for (i = 3; i >= 1; i--)
+                    for (j = 3; j >= 1; j--)
+                        y[i, j] -= y[i, 4] * y[4, j] / y[4, 4];
+                for (i = 1; i <= 3; i++)
+                {
+                    ii = in_tb[ktb, i];
+                    if (ii == 0)
+                        continue;
+                    for (j = 1; j <= 3; j++)
+                    {
+                        jj = in_tb[ktb, j];
+                        if (jj == 0)
+                            continue;
+                        w[ii, jj] += y[i, j];
+                    }
+                }                
+            }
+        }
+
+        //Формирование комплексных частных матриц униполярного транзистора
+        public void form_tu(int[,] in_tu, float[,] z_tu, int ntu, Complex[,] w, Complex s)
+        {
+            Complex[,] y = new Complex[4, 4];
+            int i, j, ii, jj, g, l, m;
+            int[,] in_d = { { 2, 3 }, { 1, 3 }, { 1, 2 }, { 2, 3 } };
+            int[] in_ju = { 1, 3, 2, 3 };
+            for (int ktu = 1; ktu <= ntu; ktu++)
+            {
+                for (i = 1; i <= 3; i++)
+                    for (j = 1; j <= 3; j++)
+                        y[i, j] = new Complex();
+                for (int k = 0; k <= 3; k++)
+                    for (l = 0; l <= 1; l++)
+                    {
+                        i = in_d[k, l];
+                        for (m = 0; m <= 1; m++)
+                        {
+                            j = in_d[k, m];
+                            g = (1 - 2 * l) * (1 - 2 * m);
+                            if (k == 0)
+                                y[i, j] += g / z_tu[ktu, k];
+                            else
+                                y[i, j] += g * s * z_tu[ktu, k];
+                        }
+                    }
+                for (l = 2; l <= 3; l++)
+                {
+                    i = in_ju[l];
+                    for (m = 0; m <= 1; m++)
+                    {
+                        j = in_ju[m];
+                        g = (5 - 2 * l) * (1 - 2 * m);
+                        y[i, j] += g * z_tu[ktu, 4];
+                    }
+                }
+                
+                for (i = 1; i <= 3; i++)
+                {
+                    ii = in_tu[ktu, i];
+                    if (ii == 0)
+                        continue;
+                    for (j = 1; j <= 3; j++)
+                    {
+                        jj = in_tu[ktu, j];
+                        if (jj == 0)
+                            continue;
+                        w[ii, jj] += y[i, j];
+                    }
+                }
+            }
+        }
 
         //Формирование комплексных частных матриц операционного усилителя
         public void form_ou(int[,] in_ou, float[,] z_ou, int nou, Complex[,] w, Complex s)
