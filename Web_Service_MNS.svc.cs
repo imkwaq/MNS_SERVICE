@@ -9,7 +9,7 @@ namespace MNS_SERVICE
 
         #region description of the data
         const int MF = 20;
-        public int nv, n, nr, nc, nl, nju, ntri, nji, neu, nou, nf, lp, lm, kp, km, k;
+        public int nv, n, nr, nc, nl, nju, ntri, nji, nei, neu, nou, ntr, noui, ntu, ntb, nf, lp, lm, kp, km, k;
 
         public float[] f = new float[MF + 1];
         public float[] kum = new float[MF + 1];
@@ -35,6 +35,34 @@ namespace MNS_SERVICE
         public int[] In_ju;
         public float[,] z_ju;
 
+        public int[,] in_eu;
+        public int[] In_eu;
+        public float[,] z_eu;       
+
+        public float[,] z_ji;
+        public int[,] in_ji;
+        public int[] In_ji;
+
+        public float[,] z_ei;
+        public int[,] in_ei;
+        public int[] In_ei;
+
+        public int[,] in_ou;
+        public int[] In_ou;
+        public float[,] z_ou;
+
+        public int[,] in_oui;
+        public int[] In_oui;
+        public float[] z_oui;
+
+        public int[,] in_tu;
+        public int[] In_tu;
+        public float[,] z_tu;
+
+        public int[,] in_tb;
+        public int[] In_tb;
+        public float[,] z_tb;
+
         public int[,] in_tri;
         public int[] In_tri;
         public float[] z_tri;
@@ -43,129 +71,73 @@ namespace MNS_SERVICE
         public int[] In_tr;
         public float[,] z_tr;
 
-        public float[,] z_ji;
-        public int[,] in_ji;
-        public int[] In_ji;
-
-        public int[,] in_ou;
-        public int[] In_ou;
-        public float[] z_ou;
-        public float[] Z_ou;
-
         public float[] Out = new float[6 * MF + 1];
 
-        //public static Complex[,] w;
-        //public static Complex s;  //комплексная частота
-#endregion
+        #endregion
+        private int[,] get2Darray(int[] array, int nodes, int count) 
+        {
+            int[,] result = new int[count + 1, nodes];
+            for (int i = 0; i < count; i++)
+                for (int j = 0; j < nodes; j++)
+                    result[i + 1, j] = array[i * nodes + j];
+            return result;
+        }
+        private float[,] get2Darray(float[] array, int nodes, int count)
+        {
+            float[,] result = new float[count + 1, nodes];
+            for (int i = 0; i < count; i++)
+                for (int j = 0; j < nodes; j++)
+                    result[i + 1, j] = array[i * nodes + j];
+            return result;
+        }
 
-        public float[] OnCalc(int[] In_r, float[] z_r, int nr, int[] In_c, float[] z_c, int nc, int[] In_l, float[] z_l, int nl, int nv, int lp, int lm, int kp, int km, float[] f, int nf, int nju, int[] In_ju, float[] Z_ju, int neu, int[] In_eu, float[] Z_eu, int nji, int[] In_ji, float[] Z_ji, int nou, int[] In_ou, float[] Z_ou, int ntri, int[] In_tri, float[] z_tri)
-              
-            
-        //, int nji, int[] In_ji, float[] z_ji, int nju, int[] In_ju, float[] Z_ju, int ntri, int[] In_tri, float[] z_tri, int nou, int[] In_ou, float[] Z_ou
+        public float[] OnCalc(
+            int[] In_r, float[] z_r, int nr, 
+            int[] In_c, float[] z_c, int nc, 
+            int[] In_l, float[] z_l, int nl, 
+            int nv, int lp, int lm, int kp, int km, float[] f, int nf, 
+            int nju, int[] In_ju, float[] Z_ju, 
+            int neu, int[] In_eu, float[] Z_eu, 
+            int nji, int[] In_ji, float[] Z_ji,
+            int nei, int[] In_ei, float[] Z_ei,
+            int nou, int[] In_ou, float[] Z_ou, 
+            int ntri, int[] In_tri, float[] Z_tri,
+            int ntb, int[] In_tb, float[] Z_tb,
+            int ntu, int[] In_tu, float[] Z_tu,
+            int ntr, int[] In_tr, float[] Z_tr,
+            int noui, int[] In_oui, float[] Z_oui)
         {
             #region Unpacking one-dimensional arrays
-        int[,] in_r = new int[nr + 1, 2];
-            for (int i = 1; i <= nr; i++)
-            {
-                in_r[i, 0] = In_r[i];
-                in_r[i, 1] = In_r[nr + i];
-            }
+            in_r = get2Darray(In_r, 2, nr);
+            in_c = get2Darray(In_c, 2, nc);
+            in_l = get2Darray(In_l, 2, nl);
 
-            int[,] in_c = new int[nc + 1, 2];
-            for (int i = 1; i <= nc; i++)
-            {
-                in_c[i, 0] = In_c[i];
-                in_c[i, 1] = In_c[nc + i];
-            }
-
-            int[,] in_l = new int[nl + 1, 2];
-            for (int i = 1; i <= nl; i++)
-            {
-                in_l[i, 0] = In_l[i];
-                in_l[i, 1] = In_l[nl + i];
-            }
-
-            int[,] in_ju = new int[nju + 1, 4];
-            for (int i = 1; i <= nju; i++)
-            {
-                in_ju[i, 0] = In_ju[i];
-                in_ju[i, 1] = In_ju[nju + i];
-                in_ju[i, 2] = In_ju[nju * 2 + i];
-                in_ju[i, 3] = In_ju[nju * 3 + i];
-            }
-
-            int[,] in_ji = new int[nji + 1, 4];
-            for (int i = 1; i <= nji; i++)
-            {
-                in_ji[i, 0] = In_ji[i];
-                in_ji[i, 1] = In_ji[nji + i];
-                in_ji[i, 2] = In_ji[nji * 2 + i];
-                in_ji[i, 3] = In_ji[nji * 3 + i];
-            }
-
-            int[,] in_eu = new int[neu + 1, 4];
-            for (int i = 1; i <= neu; i++)
-            {
-                in_eu[i, 0] = In_eu[i];
-                in_eu[i, 1] = In_eu[neu + i];
-                in_eu[i, 2] = In_eu[neu * 2 + i];
-                in_eu[i, 3] = In_eu[neu * 3 + i];
-            }
-
-            int[,] in_tri = new int[ntri + 1, 4];
-            for (int i = 1; i <= ntri; i++)
-            {
-                in_tri[i, 0] = In_tri[i];
-                in_tri[i, 1] = In_tri[ntri + i];
-                in_tri[i, 2] = In_tri[ntri * 2 + i];
-                in_tri[i, 3] = In_tri[ntri * 3 + i];
-            }
-
-            int[,] in_ou = new int[nou + 1, 5];
-            for (int i = 1; i <= nou; i++)
-            {
-                in_ou[i, 0] = In_ou[i];
-                in_ou[i, 1] = In_ou[nou + i];
-                in_ou[i, 2] = In_ou[nou * 2 + i];
-                in_ou[i, 3] = In_ou[nou * 3 + i];
-                in_ou[i, 4] = In_ou[nou * 4 + i];
-            }
-
-            float[,] z_ju = new float[nju + 1, 3];
-            for (int i = 1; i <= nju; i++)
-            {
-                z_ju[i, 0] = Z_ju[i];
-                z_ju[i, 1] = Z_ju[nju + i];
-                z_ju[i, 2] = Z_ju[nju * 2 + i];
-            }
-            float[,] z_eu = new float[neu + 1, 3];
-            for (int i = 1; i <= neu; i++)
-            {
-                z_eu[i, 0] = Z_eu[i];
-                z_eu[i, 1] = Z_eu[neu + i];
-                z_eu[i, 2] = Z_eu[neu * 2 + i];
-            }
-            float[,] z_ji = new float[nji + 1, 3];
-            for (int i = 1; i <= nji; i++)
-            {
-                z_ji[i, 0] = Z_ji[i];
-                z_ji[i, 1] = Z_ji[nji + i];
-                z_ji[i, 2] = Z_ji[nji * 2 + i];
-            }
-
-            float[,] z_ou = new float[nou + 1, 4];
-            for (int i = 1; i <= nou; i++)
-            {
-                z_ou[i, 0] = Z_ou[i];
-                z_ou[i, 1] = Z_ou[nou + i];
-                z_ou[i, 2] = Z_ou[nou * 2 + i];
-                z_ou[i, 3] = Z_ou[nou * 3 + i];
-            }
+            in_ju = get2Darray(In_ju, 4, nju);
+            z_ju = get2Darray(Z_ju, 3, nju);
+            in_eu = get2Darray(In_eu, 4, neu);
+            z_eu = get2Darray(Z_eu, 3, neu);
+            in_ji = get2Darray(In_ji, 4, nji);
+            z_ji = get2Darray(Z_ji, 3, nji);
+            in_ei = get2Darray(In_ei, 4, nei);
+            z_ei = get2Darray(Z_ei, 3, nei);
+        
+            in_tu = get2Darray(In_tu, 4, ntu);
+            z_tu = get2Darray(Z_tu, 5, ntu);
+            in_tb = get2Darray(In_tb, 6, ntb);
+            z_tb = get2Darray(Z_tb, 4, ntb);
+            in_tr = get2Darray(In_tr, 4, ntr);
+            z_tr = get2Darray(Z_tr, 5, ntr);
+            in_tri = get2Darray(In_tri, 4, ntri);
+            z_tri = Z_tri;
+            in_ou = get2Darray(In_ou, 5, nou);
+            z_ou = get2Darray(Z_ou, 4, nou);
+            in_oui = get2Darray(In_oui, 4, noui);
+            z_oui = Z_oui;
             #endregion
 
             for (int kf = 1; kf <= nf; kf++)
             {
-                n = nv + nr + nc + nl + nju + neu + nji + nou + ntri; 
+                n = nv + nr + nc + nl + nju + neu + nji + nou + ntri + ntr + ntu + ntb + noui; 
                 Complex[,] w = new Complex[n + 1, n + 1];
                 Complex cn = new Complex(0, 0);
                 for (int i = 0; i <= n; i++)
@@ -175,16 +147,25 @@ namespace MNS_SERVICE
                     }
                 Complex s = new Complex(0.0, 2 * 3.141593 * f[kf]);
                 n = nv;
+
                 form_d(in_r, z_r, nr, 'R', w, s);
                 form_d(in_c, z_c, nc, 'C', w, s);
                 form_l(in_l, z_l, nl, w, s);
-                form_d(in_l, z_l, nl, 'L', w, s);                
+                
                 form_ju(in_ju, z_ju, nju, w, s);
                 form_ji(in_ji, z_ji, nji, w, s);
                 form_eu(in_eu, z_eu, neu, w, s);
-                form_tri(in_tri, z_tri, ntri, w);
+                form_ei(in_ei, z_ei, nei, w, s);
+
+                form_tr(in_tb, z_tb, ntb, w, s);
+                form_tu(in_tu, z_tu, ntu, w, s);
+                form_tr(in_tr, z_tr, ntr, w, s);
+                form_tri(in_tri, z_tri, ntri, w);                
                 form_ou(in_ou, z_ou, nou, w, s);
+                form_oui(in_oui, z_oui, noui, w);
+
                 form_s(lp, lm, w);
+
                 if ((lp == 1) && (lm == 0) && (kp == 2) && (km == 0))
                 {
                     st(w, n);
@@ -369,7 +350,7 @@ namespace MNS_SERVICE
             n += 2 * nei;
         }
         //Формирование конмлексных частных матриц идеального операционного усилителя
-        public void form_oui(int[,] in_oui, float[,] z_oui, int noui, Complex[,] w)
+        public void form_oui(int[,] in_oui, float[] z_oui, int noui, Complex[,] w)
         {
             Complex yy = new Complex(0, 0);
             int i, j1, j2, g;
